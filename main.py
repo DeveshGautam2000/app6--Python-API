@@ -1,13 +1,23 @@
 from flask import Flask,render_template
 
-app = Flask("website")
+app = Flask(__name__)
 
-@app.route("/home")
+
+@app.route("/")
 def home():
-    return render_template("index.html")
+    return render_template("home.html")
 
-@app.route("/about")
-def about():
-    return render_template("about.html")
 
-app.run(debug=True)
+
+@app.route("/api/v1/<station>/<date>")
+def about(station, date):
+    temp = 23
+    return {
+        "station": station,
+        "date": date,
+        "temperature": temp
+    }
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
