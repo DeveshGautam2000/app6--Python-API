@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 stations = pd.read_csv("Data-Exploration\data-small\stations.txt", skiprows=17)
 stations = stations[["STAID","STANAME                                 "]]
+stations = stations[:100]
 
 @app.route("/")
 def home():
