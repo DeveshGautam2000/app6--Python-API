@@ -14,16 +14,31 @@ def home():
 
 @app.route("/api/v1/<station>/<date>")
 def about(station, date):
+    
     filename = "Data-Exploration/data-small/TG_STAID" + str(station).zfill(6) + ".txt"
     df = pd.read_csv(filename, skiprows=20, parse_dates=["    DATE"])
     temp = df.loc[df["    DATE"] == date]["   TG"].squeeze() / 10
-    print(temp)
+
     return {
         "station": station,
         "date": date,
         "temperature": temp
     }
 
+@app.route("/api/v1/<station>")
+def all_date(station):
+    filename = "Data-Exploration/data-small/TG_STAID" + str(station).zfill(6) + ".txt"
+    df = pd.read_csv(filename, skiprows=20, parse_dates=["    DATE"])
+    result = df.to_dict(orient="records")
+    return result
+
+@app.route("/api/v1/yearly/<station>/<year>")
+def yearly(station, year):
+    filename = "Data-Exploration/data-small/TG_STAID" + str(station).zfill(6) + ".txt"
+    df = pd.read_csv(filename, skiprows=20)
+    df["    DATE"] = df["    DATE"].astype(str)
+    result = df.loc[df["    DATE"].str.startswith(str(year))].to_dict(orient="records")
+    return result
 
 if __name__ == "__main__":
     app.run(debug=True)
